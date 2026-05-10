@@ -1,0 +1,10 @@
+<?php 
+namespace Tests\Feature; 
+use Tests\TestCase; 
+class BasicTest extends TestCase 
+{ 
+    public function test_true_is_true(): void 
+    { 
+        $this-
+    } 
+} 
