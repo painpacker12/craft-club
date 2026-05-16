@@ -77,7 +77,7 @@ class MasterControllerTest extends TestCase
         $futureDate = date('Y-m-d', strtotime('+1 month'));
 
         // Create first master class
-        MasterClass::create([
+        $first = MasterClass::create([
             'user_id' => $this->admin->id,
             'category_id' => $this->category->id,
             'title' => 'First Class',
@@ -100,7 +100,8 @@ class MasterControllerTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error');
+        // Проверяем, что есть ошибка в сессии
+        $this->assertNotNull(session('error'));
     }
 
     public function test_update_class_updates_description_and_price(): void

@@ -16,26 +16,26 @@ class AuthController extends Controller
     }
 
     // Вход
-    public function login(Request $request)
+    public function login(Request $request): object
     {
-        $credentials = $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string'
         ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-            
-            if ($user->role === 'master') {
-                return redirect()->intended(route('master.dashboard'));
-            }
-            return redirect()->intended(route('home'));
+        
+        $user = User::where('email', $validated['email'])->first();
+        
+        if (!$user || !Hash::check($validated['password'], $user->password)) {
+            return back()->with('error', 'Неверный email или пароль.');
         }
-
-        return back()->withErrors([
-            'email' => 'Неверный email или пароль.',
-        ])->onlyInput('email');
+        
+        if (!$user->email_verified) {
+            return back()->with('error', 'Подтвердите email перед входом.');
+        }
+        
+        session(['user_id' => $user->id, 'user_name' => $user->name, 'user_role' => $user->role]);
+        
+        return redirect()->route('index');
     }
 
     // Форма регистрации
