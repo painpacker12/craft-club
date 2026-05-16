@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Run Laravel Pint (Linter)
+        run: ./vendor/bin/pint --test
+    
       - uses: actions/checkout@v4
 
       - uses: shivammathur/setup-php@v2
