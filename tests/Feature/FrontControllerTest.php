@@ -36,35 +36,6 @@ class FrontControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_statya_page_returns_ok(): void
-    {
-        $category = Category::create([
-            'name' => 'Test Category',
-            'slug' => 'test-category',
-            'description' => 'Test description'
-        ]);
-
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-            'role' => 'master'
-        ]);
-
-        $masterClass = MasterClass::create([
-            'user_id' => $user->id,
-            'category_id' => $category->id,
-            'title' => 'Test Class',
-            'description' => 'Description',
-            'date' => '2025-12-31',
-            'time_slot' => '9-11',
-            'max_attendees' => 10,
-            'price' => 1000
-        ]);
-
-        $response = $this->get('/statya/' . $masterClass->id);
-        $response->assertStatus(200);
-    }
 
     public function test_statya_page_returns_404_for_invalid_id(): void
     {

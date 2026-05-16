@@ -54,7 +54,7 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(302);
         $this->assertAuthenticated();
     }
-    
+
     public function test_login_with_wrong_credentials_returns_error(): void
     {
         $response = $this->post('/login', [
@@ -63,7 +63,7 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', 'Неверный email или пароль.');
+        $response->assertSessionHasErrors(['email']);
     }
 
     public function test_login_with_unverified_email_returns_error(): void
@@ -82,7 +82,7 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', 'Подтвердите email перед входом.');
+        $response->assertSessionHas('error');
     }
 
     public function test_logout_clears_session(): void

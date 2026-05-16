@@ -54,16 +54,16 @@ class MasterControllerTest extends TestCase
             'category_id' => $this->category->id,
             'title' => 'New Master Class',
             'description' => 'Description of master class',
-            'date' => '2025-12-31',
+            'date' => date('Y-m-d', strtotime('+1 month')),
             'time_slot' => '9-11',
             'max_attendees' => 10,
             'price' => 1500
         ]);
 
-        $response->assertStatus(302); // redirect
+        $response->assertStatus(302);
         $this->assertDatabaseHas('master_classes', ['title' => 'New Master Class']);
     }
-
+    
     public function test_store_class_validates_required_fields(): void
     {
         $response = $this->actingAs($this->admin)->post('/master/classes', []);
