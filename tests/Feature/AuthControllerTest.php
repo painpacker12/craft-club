@@ -82,7 +82,8 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error');
+        // Проверяем, что есть ошибка в сессии
+        $this->assertNotNull(session('error'));
     }
 
     public function test_logout_clears_session(): void
