@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 
 class CategoryFactory extends Factory
 {
+    protected $model = \App\Models\Category::class;
+
     public function definition(): array
     {
         $name = $this->faker->unique()->word();
