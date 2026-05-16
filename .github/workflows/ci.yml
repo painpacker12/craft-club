@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction
       
       - name: Run Laravel Pint (Linter)
         run: composer exec pint -- --test
