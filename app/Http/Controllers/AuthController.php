@@ -22,22 +22,23 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string'
         ]);
-        
+
         $user = User::where('email', $validated['email'])->first();
-        
+
         if (!$user || !Hash::check($validated['password'], $user->password)) {
-            return back()->with('error', 'Неверный email или пароль.');
+            return back()->withErrors(['email' => 'Неверный email или пароль.']);
         }
-        
+
         if (!$user->email_verified) {
-            return back()->with('error', 'Подтвердите email перед входом.');
+            return back()->withErrors(['email' => 'Подтвердите email перед входом.']);
         }
-        
+
+        Auth::login($user);  // ← Добавьте это!
+
         session(['user_id' => $user->id, 'user_name' => $user->name, 'user_role' => $user->role]);
-        
+
         return redirect()->route('index');
     }
-
     // Форма регистрации
     public function showRegisterForm()
     {
