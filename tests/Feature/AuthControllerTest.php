@@ -54,4 +54,52 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(302);
         $this->assertAuthenticated();
     }
+    
+    public function test_login_with_wrong_credentials_returns_error(): void
+    {
+        $response = $this->post('/login', [
+            'email' => 'nonexistent@example.com',
+            'password' => 'wrongpassword'
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('error', 'Неверный email или пароль.');
+    }
+
+    public function test_login_with_unverified_email_returns_error(): void
+    {
+        $user = User::create([
+            'name' => 'Test User',
+            'email' => 'unverified@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'user',
+            'email_verified' => 0
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'unverified@example.com',
+            'password' => 'password'
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('error', 'Подтвердите email перед входом.');
+    }
+
+    public function test_logout_clears_session(): void
+    {
+        $user = User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'user',
+            'email_verified' => 1
+        ]);
+
+        $this->actingAs($user);
+        $this->assertAuthenticated();
+
+        $response = $this->post('/logout');
+        $response->assertStatus(302);
+        $this->assertGuest();
+    }
 }
